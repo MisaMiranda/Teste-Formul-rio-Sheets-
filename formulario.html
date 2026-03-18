@@ -384,14 +384,20 @@
       },
       body: payload
     }).then(function(res) {
-      if (res.ok || res.status === 201) {
-        document.body.innerHTML = '<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0e0e0e;padding:2rem;"><div id="sp" style="text-align:center;max-width:460px;opacity:0;transform:translateY(24px);transition:all 0.7s ease;"><p style="font-family:Playfair Display,serif;font-size:1.6rem;color:#f0ece4;line-height:1.6;">Formulário preenchido com sucesso! Logo entraremos em contato. 😊</p></div></div>';
-        setTimeout(function(){ var el=document.getElementById('sp'); if(el){el.style.opacity='1';el.style.transform='translateY(0)';} }, 60);
-      } else {
-        btn.textContent = 'Erro ao enviar. Tente novamente.';
-        btn.disabled = false;
-      }
-    }).catch(function() {
+      console.log('Status:', res.status);
+      return res.text().then(function(text) {
+        console.log('Resposta:', text);
+        if (res.ok || res.status === 201) {
+          document.body.innerHTML = '<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0e0e0e;padding:2rem;"><div id="sp" style="text-align:center;max-width:460px;opacity:0;transform:translateY(24px);transition:all 0.7s ease;"><p style="font-family:Playfair Display,serif;font-size:1.6rem;color:#f0ece4;line-height:1.6;">Formulário preenchido com sucesso! Logo entraremos em contato. 😊</p></div></div>';
+          setTimeout(function(){ var el=document.getElementById('sp'); if(el){el.style.opacity='1';el.style.transform='translateY(0)';} }, 60);
+        } else {
+          console.log('Erro status:', res.status, text);
+          btn.textContent = 'Erro ao enviar. Tente novamente.';
+          btn.disabled = false;
+        }
+      });
+    }).catch(function(err) {
+      console.log('Erro catch:', err);
       btn.textContent = 'Erro ao enviar. Tente novamente.';
       btn.disabled = false;
     });
